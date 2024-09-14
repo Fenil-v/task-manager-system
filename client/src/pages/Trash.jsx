@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdDelete,
   MdKeyboardArrowDown,
@@ -13,6 +13,8 @@ import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils";
 import AddUser from "../components/AddUser";
 import ConfirmatioDialog from "../components/Dialogs";
+import { useGetTaskMutation } from "../redux/slices/apiSlice";
+import { setTasks } from "../redux/slices/taskSlice";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -26,6 +28,25 @@ const Trash = () => {
   const [msg, setMsg] = useState(null);
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
+  // const getTasks = useGetTaskMutation();
+  const [loading, setLoading] = useState(false);
+
+  // const fetchTasks = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const result = await getTasks().unwrap();
+  //     setTasks(result.tasks);
+  //   } catch (error) {
+  //     console.error("Failed to fetch tasks:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchTasks();
+  // }, getTasks);
+  // console.log(getTasks);
 
   const deleteAllClick = () => {
     setType("deleteAll");
@@ -104,8 +125,11 @@ const Trash = () => {
       </td>
     </tr>
   );
-
-  return (
+  return loading ? (
+    <div className="py-10">
+      <Loading />
+    </div>
+  ) : (
     <>
       <div className="w-full md:px-1 px-0 mb-6">
         <div className="flex items-center justify-between mb-8">
@@ -131,9 +155,9 @@ const Trash = () => {
             <table className="w-full">
               <TableHeader />
               <tbody>
-                {tasks?.map((tk, id) => (
+                {/* {getTasks?.map((tk, id) => (
                   <TableRow key={id} item={tk} />
-                ))}
+                ))} */}
               </tbody>
             </table>
           </div>

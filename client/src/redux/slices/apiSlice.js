@@ -59,6 +59,13 @@ export const apiSlice = createApi({
         body: getTaskData,
       }),
     }),
+    getAllTasksId: builder.mutation({
+      query:(getAllTaskData) => ({
+        url: '/allTasks',
+        method: 'GET',
+        body: getAllTaskData
+      })
+    })
   }),
 });
 

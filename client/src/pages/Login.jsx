@@ -23,7 +23,7 @@ const Login = () => {
   const submitHandler = async (data) => {
     try {
       const userData = await login(data).unwrap();
-      console.log(userData, "userData");
+      // console.log(userData, "userData");
       dispatch(setCredentials(userData));
       navigate("/dashboard");
     } catch (err) {
