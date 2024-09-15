@@ -65,6 +65,13 @@ export const apiSlice = createApi({
         method: 'GET',
         body: getAllTaskData
       })
+    }),
+    deleteRestoreTask: builder.mutation({
+      query: ({ id, actionType }) => ({
+        url: `task/delete-restore/${id}`,
+        method: 'DELETE',
+        params: { actionType },
+      }),
     })
   }),
 });
@@ -76,4 +83,5 @@ export const {
   useCreateTaskMutation,
   useUpdateTaskMutation,
   useGetTaskMutation,
+  useDeleteRestoreTaskMutation 
 } = apiSlice;

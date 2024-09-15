@@ -7,14 +7,15 @@ import {
   MdKeyboardDoubleArrowUp,
   MdOutlineRestore,
 } from "react-icons/md";
-import { tasks } from "../assets/data";
 import Title from "../components/Title";
 import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils";
-import AddUser from "../components/AddUser";
 import ConfirmatioDialog from "../components/Dialogs";
-import { useGetTaskMutation } from "../redux/slices/apiSlice";
-import { setTasks } from "../redux/slices/taskSlice";
+import {
+  useGetTaskMutation,
+  useDeleteRestoreTaskMutation,
+} from "../redux/slices/apiSlice";
+import Loading from "../components/Loader";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -28,26 +29,46 @@ const Trash = () => {
   const [msg, setMsg] = useState(null);
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
-  // const getTasks = useGetTaskMutation();
   const [loading, setLoading] = useState(false);
+  const [task, setTasks] = useState();
+  const [getTasks] = useGetTaskMutation();
+  const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
 
-  // const fetchTasks = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const result = await getTasks().unwrap();
-  //     setTasks(result.tasks);
-  //   } catch (error) {
-  //     console.error("Failed to fetch tasks:", error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  // fetch all tasks
+  const fetchTasks = async () => {
+    setLoading(true);
+    try {
+      const result = await getTasks().unwrap();
+      setTasks(result.tasks);
+    } catch (error) {
+      console.error("Failed to fetch tasks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchTasks();
-  // }, getTasks);
-  // console.log(getTasks);
+  useEffect(() => {
+    fetchTasks();
+  }, [getTasks]);
 
+  // delete and restore operation 
+  const handleAction = async () => {
+    try {
+      if (type === "delete") {
+        await deleteRestoreTask({ id: selected, actionType: "delete" }).unwrap();
+      } else if (type === "restore") {
+        await deleteRestoreTask({ id: selected, actionType: "restore" }).unwrap();
+      } else if (type === "deleteAll") {
+        await deleteRestoreTask({ actionType: "deleteAll" }).unwrap();
+      } else if (type === "restoreAll") {
+        await deleteRestoreTask({ actionType: "restoreAll" }).unwrap();
+      }
+      setOpenDialog(false);
+      fetchTasks();
+    } catch (error) {
+      console.error("Failed to perform action:", error);
+    }
+  };
   const deleteAllClick = () => {
     setType("deleteAll");
     setMsg("Do you want to permenantly delete all items?");
@@ -155,9 +176,9 @@ const Trash = () => {
             <table className="w-full">
               <TableHeader />
               <tbody>
-                {/* {getTasks?.map((tk, id) => (
+                {task?.map((tk, id) => (
                   <TableRow key={id} item={tk} />
-                ))} */}
+                ))}
               </tbody>
             </table>
           </div>
@@ -173,7 +194,7 @@ const Trash = () => {
         setMsg={setMsg}
         type={type}
         setType={setType}
-        onClick={() => deleteRestoreHandler()}
+        onClick={handleAction}
       />
     </>
   );

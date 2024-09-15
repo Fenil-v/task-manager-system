@@ -352,25 +352,26 @@ export const deleteRestoreTask = async (req, res) => {
   }
 };
 
-export const getAllTasksId = async(req,res) => {
+export const getAllTasksId = async (req, res) => {
   try {
-    const task = await Task.find()
-    .populate({
-      path: "team",
-      select: "name title role email",
-    })
-    .populate({
-      path: "activities.by",
-      select: "name",
-    });
+    const tasks = await Task.find()
+      .populate({
+        path: "team",
+        select: "name title role email",
+      })
+      .populate({
+        path: "activities.by",
+        select: "name",
+      });
 
-  res.status(200).json({
-    status: true,
-    task,
-  });
+    res.status(200).json({
+      status: true,
+      tasks,
+    });
 
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, message: error.message });
   }
 };
+
