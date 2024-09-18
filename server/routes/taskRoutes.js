@@ -5,6 +5,7 @@ import {
   dashboardStatistics,
   deleteRestoreTask,
   duplicateTask,
+  getAllTasksId,
   getTask,
   getTasks,
   postTaskActivity,
@@ -20,13 +21,13 @@ router.post("/duplicate/:id", protectRoute, isAdminRoute, duplicateTask);
 router.post("/activity/:id", protectRoute, postTaskActivity);
 
 router.get("/dashboard", protectRoute, dashboardStatistics);
-// router.get("/", protectRoute, getTasks);
-router.get("/",getTasks);
+router.get("/", protectRoute, getTasks);
 router.get("/:id", protectRoute, getTask);
 
 router.put("/create-subtask/:id", protectRoute, isAdminRoute, createSubTask);
 router.put("/update/:id", protectRoute, isAdminRoute, updateTask);
 router.put("/:id", protectRoute, isAdminRoute, trashTask);
+router.get("/allTasks", getAllTasksId);
 
 router.delete(
   "/delete-restore/:id?",
