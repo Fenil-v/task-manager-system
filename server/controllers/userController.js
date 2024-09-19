@@ -1,7 +1,7 @@
 import { response } from "express";
 import User from "../models/user.js";
 import { createJWT } from "../utils/index.js";
-import Notification from "../models/notification.js";
+import Notice from "../models/notification.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -110,7 +110,7 @@ export const getNotificationsList = async (req, res) => {
   try {
     const { userId } = req.user;
 
-    const notice = await Notification.find({
+    const notice = await Notice.find({
       team: userId,
       isRead: { $nin: [userId] },
     }).populate("task", "title");
@@ -166,13 +166,13 @@ export const markNotificationRead = async (req, res) => {
     const { isReadType, id } = req.query;
 
     if (isReadType === "all") {
-      await Notification.updateMany(
+      await Notice.updateMany(
         { team: userId, isRead: { $nin: [userId] } },
         { $push: { isRead: userId } },
         { new: true }
       );
     } else {
-      await Notification.findOneAndUpdate(
+      await Notice.findOneAndUpdate(
         { _id: id, isRead: { $nin: [userId] } },
         { $push: { isRead: userId } },
         { new: true }

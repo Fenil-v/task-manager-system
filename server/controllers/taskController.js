@@ -1,4 +1,4 @@
-import Notification from "../models/notification.js";
+import Notice from "../models/notification.js";
 import Task from "../models/task.js";
 import User from "../models/user.js";
 
@@ -35,7 +35,7 @@ export const createTask = async (req, res) => {
       activities: activity,
     });
 
-    await Notification.create({
+    await Notice.create({
       team,
       text,
       task: task._id,
@@ -80,7 +80,7 @@ export const duplicateTask = async (req, res) => {
       ` The task priority is set a ${task.priority
       } priority, so check and act accordingly. The task date is ${task.date.toDateString()}. Thank you!!!`;
 
-    await Notification.create({
+    await Notice.create({
       team: task.team,
       text,
       task: newTask._id,
@@ -351,27 +351,3 @@ export const deleteRestoreTask = async (req, res) => {
     return res.status(400).json({ status: false, message: error.message });
   }
 };
-
-export const getAllTasksId = async (req, res) => {
-  try {
-    const tasks = await Task.find()
-      .populate({
-        path: "team",
-        select: "name title role email",
-      })
-      .populate({
-        path: "activities.by",
-        select: "name",
-      });
-
-    res.status(200).json({
-      status: true,
-      tasks,
-    });
-
-  } catch (error) {
-    console.log(error);
-    return res.status(400).json({ status: false, message: error.message });
-  }
-};
-
