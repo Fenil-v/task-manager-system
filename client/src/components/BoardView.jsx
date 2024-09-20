@@ -3,8 +3,6 @@ import TaskCard from "./TaskCard";
 import TaskTitle from "./TaskTitle";
 
 const BoardView = ({ tasks, status }) => {
-  // console.log(tasks);
-  
   // Group tasks by status
   const groupedTasks = {
     todo: tasks.filter((task) => task.stage === "todo"),
@@ -16,7 +14,6 @@ const BoardView = ({ tasks, status }) => {
   const filteredTasks = status
     ? tasks.filter((task) => task.stage === status)
     : null;
-console.log(filteredTasks,"filteredTasks");
 
   return (
     <>
